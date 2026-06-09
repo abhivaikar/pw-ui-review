@@ -93,7 +93,9 @@ failures:
 pw-ui-review
 ```
 
-It validates dependencies, starts a local server, and opens your browser.
+It validates dependencies, starts a local server, and opens your browser:
+
+![pw-ui-review startup: dependency checklist and local server](screenshots/cli-command-trigger.png)
 
 ### Options
 
