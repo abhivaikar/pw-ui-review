@@ -31,14 +31,12 @@ beforeEach(() => {
 });
 
 describe('Detail — approve flow', () => {
-  it('approves, shows confirmation, then auto-advances after the delay', async () => {
-    vi.useFakeTimers();
-    const next = { summary: { updated: 1 }, nextUnreviewed: 'b.png' };
+  it('approves, posts the decision, and stays on the failure (no auto-advance)', async () => {
+    const next = { summary: { updated: 1, reviewed: 1, total: 3, complete: false }, nextUnreviewed: 'b.png' };
     api.decide.mockResolvedValue(next);
     const onDecided = vi.fn();
-    const onAdvance = vi.fn();
 
-    render(<Detail failure={mkFailure()} onDecided={onDecided} onAdvance={onAdvance} onZoom={() => {}} />);
+    render(<Detail failure={mkFailure()} onDecided={onDecided} onZoom={() => {}} />);
 
     await act(async () => {
       fireEvent.click(screen.getByText('Update baseline'));
@@ -46,19 +44,17 @@ describe('Detail — approve flow', () => {
 
     expect(api.decide).toHaveBeenCalledWith('hero-chromium-darwin.png', 'updated');
     expect(onDecided).toHaveBeenCalledWith(next);
+    // The decision banner replaces the buttons in place — no advance.
     expect(screen.getByText(/Baseline updated/)).toBeInTheDocument();
-    expect(onAdvance).not.toHaveBeenCalled();
-
-    await act(async () => { vi.advanceTimersByTime(2000); });
-    expect(onAdvance).toHaveBeenCalledTimes(1);
-    vi.useRealTimers();
+    expect(screen.getByRole('button', { name: 'Change decision' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Update baseline' })).toBeNull();
   });
 });
 
 describe('Detail — reject flow', () => {
   it('keeps the baseline and shows post-rejection guidance', async () => {
     api.decide.mockResolvedValue({ summary: { kept: 1 }, nextUnreviewed: null });
-    render(<Detail failure={mkFailure()} onDecided={() => {}} onAdvance={() => {}} onZoom={() => {}} />);
+    render(<Detail failure={mkFailure()} onDecided={() => {}} onZoom={() => {}} />);
 
     await act(async () => { fireEvent.click(screen.getByText('Keep current baseline')); });
 
@@ -74,7 +70,7 @@ describe('Detail — import flow', () => {
     api.confirmImport.mockResolvedValue({ summary: { imported: 1 }, nextUnreviewed: null });
     const onDecided = vi.fn();
 
-    render(<Detail failure={mkFailure()} onDecided={onDecided} onAdvance={() => {}} onZoom={() => {}} />);
+    render(<Detail failure={mkFailure()} onDecided={onDecided} onZoom={() => {}} />);
 
     const file = new File([new Uint8Array([1, 2, 3])], 'design.png', { type: 'image/png' });
     const input = screen.getByTestId('import-input');
@@ -90,7 +86,7 @@ describe('Detail — import flow', () => {
 
   it('shows a dimension-mismatch error and offers no confirm', async () => {
     api.validateImport.mockResolvedValue({ ok: false, source: { width: 1280, height: 900 }, reference: { width: 1280, height: 800 } });
-    render(<Detail failure={mkFailure()} onDecided={() => {}} onAdvance={() => {}} onZoom={() => {}} />);
+    render(<Detail failure={mkFailure()} onDecided={() => {}} onZoom={() => {}} />);
 
     const file = new File([new Uint8Array([1])], 'wrong.png', { type: 'image/png' });
     await act(async () => { fireEvent.change(screen.getByTestId('import-input'), { target: { files: [file] } }); });

@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+
+- Approving or importing a baseline no longer auto-advances to the next failure
+  after a delay. You stay on the item you just decided — it shows the decision
+  banner (with "Change decision") — and move on by picking the next failure
+  yourself. The Session-complete summary still appears once every failure has
+  been reviewed.
+
 ## [0.1.0] - 2026-06-09
 
 ### Added

@@ -21,13 +21,12 @@ export function App() {
       .catch((err) => setError(err.message));
   }, []);
 
-  const onDecided = useCallback((next) => setState(next), []);
-
-  const onAdvance = useCallback(() => {
-    setState((s) => {
-      setActiveKey(s?.nextUnreviewed ?? null);
-      return s;
-    });
+  const onDecided = useCallback((next) => {
+    setState(next);
+    // No auto-advance between items: you stay on the failure you just decided.
+    // The one exception is the very end — once everything is reviewed, drop the
+    // selection so the Session-complete summary takes over.
+    if (next?.summary?.complete) setActiveKey(null);
   }, []);
 
   if (error) {
@@ -82,7 +81,6 @@ export function App() {
           key={activeFailure.key}
           failure={activeFailure}
           onDecided={onDecided}
-          onAdvance={onAdvance}
           onZoom={(src, alt) => setOverlay({ src, alt })}
         />
       );

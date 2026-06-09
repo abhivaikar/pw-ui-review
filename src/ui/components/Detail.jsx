@@ -1,8 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { api } from '../api.js';
 
-const APPROVE_ADVANCE_MS = 2000; // approve: confirm, then auto-advance
-const REJECT_RESTORE_MS = 4000;  // reject: show guidance, then restore buttons (no advance)
+const REJECT_RESTORE_MS = 4000;  // reject: show guidance, then restore the decision banner
 
 // ── Header ──────────────────────────────────────────────────────────────────
 export function DetailHeader({ failure }) {
@@ -289,16 +288,15 @@ function DecisionBanner({ decision, onChange }) {
 }
 
 export function ActionBar({ confirmed, decision, changing, onApprove, onReject, onChange, busy }) {
-  // 1) Immediate feedback right after a click in this view.
-  if (confirmed === 'updated' || confirmed === 'imported') {
-    return <div className="confirmation confirmation--approve">Baseline updated. ✓</div>;
-  }
+  // 1) Reject shows post-rejection guidance briefly before the decision banner.
   if (confirmed === 'kept') {
     return <div className="confirmation confirmation--reject">{REJECT_GUIDANCE}</div>;
   }
-  // 2) Revisiting an already-decided failure — show the decision, not raw buttons.
-  if (decision && !changing) {
-    return <DecisionBanner decision={decision} onChange={onChange} />;
+  // 2) A decision exists — just made in this view (approve/import) or on a
+  //    revisit — so show the decision banner instead of the raw buttons.
+  const settled = confirmed ?? decision;
+  if (settled && !changing) {
+    return <DecisionBanner decision={settled} onChange={onChange} />;
   }
   // 3) Undecided, or actively changing a decision — the two action buttons.
   return (
@@ -388,7 +386,7 @@ function ImportSection({ failure, onValidated, onImported, onInteract }) {
 }
 
 // ── Composed detail view ────────────────────────────────────────────────────
-export function Detail({ failure, onDecided, onAdvance, onZoom }) {
+export function Detail({ failure, onDecided, onZoom }) {
   const [confirmed, setConfirmed] = useState(null);
   const [busy, setBusy] = useState(false);
   const [changing, setChanging] = useState(false);
@@ -409,16 +407,17 @@ export function Detail({ failure, onDecided, onAdvance, onZoom }) {
     setChanging(false);
     try {
       const next = await api.decide(failure.key, decision);
-      onDecided?.(next);
-      setConfirmed(decision);
       clearTimer();
-      if (decision === 'updated') {
-        // Approve: confirm briefly, then auto-advance to the next failure.
-        timer.current = setTimeout(() => onAdvance?.(), APPROVE_ADVANCE_MS);
-      } else if (decision === 'kept') {
-        // Reject: show guidance, then restore the buttons. No auto-advance.
+      if (decision === 'kept') {
+        // Reject: show guidance briefly, then settle into the decision banner.
+        setConfirmed('kept');
         timer.current = setTimeout(() => setConfirmed(null), REJECT_RESTORE_MS);
+      } else {
+        // Approve: record and show the decision banner right here. We stay on
+        // this failure — no auto-advance. Completion is handled by the parent.
+        setConfirmed(decision);
       }
+      onDecided?.(next);
     } finally {
       setBusy(false);
     }
@@ -444,10 +443,10 @@ export function Detail({ failure, onDecided, onAdvance, onZoom }) {
         failure={failure}
         onInteract={clearTimer}
         onImported={(next) => {
-          onDecided?.(next);
-          setConfirmed('imported');
+          // Import records the decision and stays on this failure — no advance.
           clearTimer();
-          timer.current = setTimeout(() => onAdvance?.(), APPROVE_ADVANCE_MS);
+          setConfirmed('imported');
+          onDecided?.(next);
         }}
       />
     </div>

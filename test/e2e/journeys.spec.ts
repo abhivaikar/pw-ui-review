@@ -12,21 +12,26 @@ const detailName = (page) => page.locator('.detail-header__name');
 const approve = (page) => page.getByRole('button', { name: 'Update baseline' }).click();
 const reject = (page) => page.getByRole('button', { name: 'Keep current baseline' }).click();
 
-test('review every failure by approving — auto-advances to completion', async ({ page }) => {
+test('review every failure to completion — no auto-advance between items', async ({ page }) => {
   await mockApi(page);
   await page.goto('/');
 
   await expect(detailName(page)).toContainText('checkout-form');
   await approve(page);
-  await expect(page.getByText('Baseline updated. ✓')).toBeVisible();
 
-  // Auto-advance (after the confirmation delay) to the next unreviewed failure.
+  // No auto-advance: we stay on the same failure, now showing its decision.
+  await expect(detailName(page)).toContainText('checkout-form');
+  await expect(page.locator('.decision-bar__label')).toContainText('Baseline updated');
+
+  // Manually advance to each remaining failure and approve it.
+  await page.locator('.failures').getByText('profile-header', { exact: true }).click();
+  await approve(page);
   await expect(detailName(page)).toContainText('profile-header');
-  await approve(page);
-  await expect(detailName(page)).toContainText('profile-footer');
+
+  await page.locator('.failures').getByText('profile-footer', { exact: true }).click();
   await approve(page);
 
-  // All reviewed -> session complete with the right tally.
+  // Approving the LAST one completes the session -> the summary takes over.
   await expect(page.getByText('Session complete')).toBeVisible();
   const nums = page.locator('.session-complete__num');
   await expect(nums.nth(0)).toHaveText('3'); // updated
@@ -39,11 +44,12 @@ test('mixed approve + reject session reaches completion with the correct tally',
   await mockApi(page);
   await page.goto('/');
 
-  // Approve the first -> auto-advances to profile-header.
+  // Approve the first -> stays on checkout-form (no advance).
   await approve(page);
-  await expect(detailName(page)).toContainText('profile-header');
+  await expect(detailName(page)).toContainText('checkout-form');
 
-  // Reject profile-header: guidance shown, NO auto-advance (stays put).
+  // Manually go to profile-header and reject it: guidance shown, stays put.
+  await page.locator('.failures').getByText('profile-header', { exact: true }).click();
   await reject(page);
   await expect(page.getByText(/Baseline unchanged\. This test will continue to fail/)).toBeVisible();
   await expect(page.locator('.failure-item--active')).toContainText('profile-header');
@@ -73,13 +79,16 @@ test('rejecting keeps you on the same failure (no auto-advance)', async ({ page 
 test('revisiting an approved failure shows its decision, and Change lets you flip it', async ({ page }) => {
   await mockApi(page);
   await page.goto('/');
-  await approve(page);                              // checkout-form -> updated, advances
-  await expect(detailName(page)).toContainText('profile-header');
+  await approve(page);                              // checkout-form -> updated, stays here
 
-  // Go back to the approved item: it shows the decision banner, NOT raw buttons.
-  await page.locator('.failures').getByText('form filled state matches').click();
+  // The approved item shows the decision banner, NOT raw buttons.
   await expect(page.locator('.decision-bar__label')).toContainText('Baseline updated');
   await expect(page.getByRole('button', { name: 'Update baseline' })).toHaveCount(0);
+
+  // Navigate away and back: the decision persists.
+  await page.locator('.failures').getByText('profile-header', { exact: true }).click();
+  await page.locator('.failures').getByText('form filled state matches').click();
+  await expect(page.locator('.decision-bar__label')).toContainText('Baseline updated');
 
   // Change decision -> buttons reappear -> choose Keep to flip it.
   await page.getByRole('button', { name: 'Change decision' }).click();
@@ -88,7 +97,7 @@ test('revisiting an approved failure shows its decision, and Change lets you fli
   await expect(page.locator('.failures').getByText('1 of 3 reviewed')).toBeVisible();
 });
 
-test('external import journey: choose file, confirm, item is resolved and advances', async ({ page }) => {
+test('external import journey: choose file, confirm, item is resolved (no advance)', async ({ page }) => {
   await mockApi(page);
   await page.goto('/');
   await expect(detailName(page)).toContainText('checkout-form');
@@ -98,8 +107,9 @@ test('external import journey: choose file, confirm, item is resolved and advanc
   });
   await page.getByRole('button', { name: 'Confirm import' }).click();
 
-  await expect(page.getByText('Baseline updated. ✓')).toBeVisible();
-  await expect(detailName(page)).toContainText('profile-header'); // advanced past the imported one
+  // Stays on the imported item, showing the decision banner — no advance.
+  await expect(detailName(page)).toContainText('checkout-form');
+  await expect(page.locator('.decision-bar__label')).toContainText('Baseline imported');
   await expect(page.locator('.failures').getByText('1 of 3 reviewed')).toBeVisible();
 });
 

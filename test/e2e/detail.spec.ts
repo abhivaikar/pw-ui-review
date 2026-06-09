@@ -40,14 +40,15 @@ test('reject replaces the buttons with post-rejection guidance', async ({ page }
   await expect(page.getByText(/What you can do next/)).toBeVisible();
 });
 
-test('approve shows the confirmation and posts the decision', async ({ page }) => {
+test('approve posts the decision and shows the decision banner', async ({ page }) => {
   await page.goto('/');
   const [request] = await Promise.all([
     page.waitForRequest((r) => r.url().includes('/api/decision') && r.method() === 'POST'),
     page.getByRole('button', { name: 'Update baseline' }).click(),
   ]);
   expect(JSON.parse(request.postData() || '{}')).toMatchObject({ decision: 'updated' });
-  await expect(page.getByText('Baseline updated. ✓')).toBeVisible();
+  // No auto-advance: the decision banner replaces the buttons, in place.
+  await expect(page.locator('.decision-bar__label')).toContainText('Baseline updated');
 });
 
 test('an updated snapshot marks the diff stale with a re-run note', async ({ page }) => {
