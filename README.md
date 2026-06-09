@@ -14,6 +14,23 @@ leaves your machine.
 
 ---
 
+## Screenshots
+
+Reviewing real `toMatchSnapshot()` failures — Expected / Actual / Diff
+side by side, with the failing assertion and its test steps:
+
+![pw-ui-review reviewing a visual snapshot failure](screenshots/overview.png)
+
+A draggable slider overlays the expected and actual screenshots:
+
+![Slider compare mode](screenshots/diff-slider.png)
+
+Light and dark themes (follows your OS `prefers-color-scheme`, with a manual toggle):
+
+![Dark theme](screenshots/dark-theme.png)
+
+---
+
 ## Features (v0.1)
 
 - **Post-run review UI** — review every failed `toHaveScreenshot()` /
