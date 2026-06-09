@@ -1,0 +1,81 @@
+{
+  "name": "pw-ui-review",
+  "version": "0.1.0",
+  "description": "Local web UI for reviewing Playwright visual snapshot test failures",
+  "type": "module",
+  "license": "MIT",
+  "author": "Abhijeet Vaikar <vaikar.abhijeet@gmail.com>",
+  "homepage": "https://github.com/abhivaikar/pw-ui-review#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/abhivaikar/pw-ui-review.git"
+  },
+  "bugs": {
+    "url": "https://github.com/abhivaikar/pw-ui-review/issues"
+  },
+  "keywords": [
+    "playwright",
+    "visual-testing",
+    "visual-regression",
+    "screenshot",
+    "snapshot",
+    "baseline",
+    "diff",
+    "review",
+    "testing",
+    "cli"
+  ],
+  "bin": {
+    "pw-ui-review": "bin/pw-ui-review.js"
+  },
+  "exports": {
+    "./reporter": "./src/reporter/index.js"
+  },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "files": [
+    "bin",
+    "dist",
+    "src/core",
+    "src/server",
+    "src/cli",
+    "src/reporter"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "prepublishOnly": "npm run build",
+    "start": "node bin/pw-ui-review.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run test/unit",
+    "test:integration": "vitest run test/integration",
+    "test:e2e": "playwright test",
+    "test:e2e:headed": "playwright test --headed",
+    "test:e2e:report": "playwright show-report"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "open": "^10.1.0",
+    "sharp": "^0.33.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.60.0",
+    "@testing-library/jest-dom": "^6.4.6",
+    "@testing-library/react": "^16.0.0",
+    "@testing-library/user-event": "^14.5.2",
+    "@vitejs/plugin-react": "^4.3.1",
+    "jsdom": "^24.1.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "supertest": "^7.0.0",
+    "vite": "^5.3.1",
+    "vitest": "^2.0.1"
+  }
+}

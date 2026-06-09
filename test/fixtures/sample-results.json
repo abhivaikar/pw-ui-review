@@ -1,0 +1,382 @@
+{
+  "config": {
+    "configFile": "/Users/engineer/my-app/playwright.config.ts",
+    "rootDir": "/Users/engineer/my-app",
+    "forbidOnly": false,
+    "fullyParallel": false,
+    "globalSetup": null,
+    "globalTeardown": null,
+    "maxFailures": 0,
+    "metadata": {},
+    "preserveOutput": "failures-only",
+    "reporter": [["json", { "outputFile": "test-results/results.json" }]],
+    "reportSlowTests": { "max": 5, "threshold": 15000 },
+    "quiet": false,
+    "projects": [
+      {
+        "id": "chromium",
+        "name": "chromium",
+        "outputDir": "/Users/engineer/my-app/test-results",
+        "repeatEach": 1,
+        "retries": 0,
+        "metadata": {},
+        "testDir": "/Users/engineer/my-app/e2e",
+        "testIgnore": [],
+        "testMatch": ["**/*.spec.ts"],
+        "timeout": 30000
+      }
+    ],
+    "shard": null,
+    "updateSnapshots": "none",
+    "version": "1.44.0",
+    "workers": 4,
+    "outputDir": "/Users/engineer/my-app/test-results"
+  },
+  "suites": [
+    {
+      "title": "checkout.spec.ts",
+      "file": "e2e/checkout.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "Checkout flow",
+          "file": "e2e/checkout.spec.ts",
+          "line": 3,
+          "column": 0,
+          "specs": [
+            {
+              "title": "form filled state matches baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 0,
+                      "status": "failed",
+                      "duration": 2341,
+                      "error": {
+                        "message": "Error: Screenshot comparison failed:\n  2340 pixels (1.23%) are different.\nExpected: /Users/engineer/my-app/e2e/checkout.spec.ts-snapshots/checkout-form-filled-chromium-darwin.png\nReceived: /Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-form-filled-state-matches-baseline-chromium/actual.png\nDiff: /Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-form-filled-state-matches-baseline-chromium/diff.png",
+                        "stack": "Error: Screenshot comparison failed:\n    at /Users/engineer/my-app/node_modules/@playwright/test/lib/matchers/toMatchSnapshot.js:140:13"
+                      },
+                      "retry": 0,
+                      "startTime": "2026-06-06T10:32:14.000Z",
+                      "attachments": [
+                        {
+                          "name": "expected",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/e2e/checkout.spec.ts-snapshots/checkout-form-filled-chromium-darwin.png"
+                        },
+                        {
+                          "name": "actual",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-form-filled-state-matches-baseline-chromium/actual.png"
+                        },
+                        {
+                          "name": "diff",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-form-filled-state-matches-baseline-chromium/diff.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-form-filled-state-matches-baseline-chromium/trace.zip"
+                        }
+                      ],
+                      "steps": [
+                        {
+                          "title": "Before Hooks",
+                          "category": "hook",
+                          "startTime": "2026-06-06T10:32:14.000Z",
+                          "duration": 523,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.goto(https://my-app.local/checkout)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:14.523Z",
+                          "duration": 412,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.fill(#email, user@example.com)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:14.935Z",
+                          "duration": 89,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.fill(#card-number, 4242 4242 4242 4242)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:15.024Z",
+                          "duration": 76,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.click(#submit-order)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:15.100Z",
+                          "duration": 204,
+                          "steps": []
+                        },
+                        {
+                          "title": "expect(page).toHaveScreenshot(checkout-form-filled.png)",
+                          "category": "expect",
+                          "startTime": "2026-06-06T10:32:15.304Z",
+                          "duration": 1037,
+                          "error": {
+                            "message": "Screenshot comparison failed: 2340 pixels (1.23%) are different."
+                          },
+                          "steps": []
+                        },
+                        {
+                          "title": "After Hooks",
+                          "category": "hook",
+                          "startTime": "2026-06-06T10:32:16.341Z",
+                          "duration": 0,
+                          "steps": []
+                        }
+                      ],
+                      "stderr": [],
+                      "stdout": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e2e/checkout.spec.ts#Checkout flow#form filled state matches baseline",
+              "file": "e2e/checkout.spec.ts",
+              "line": 5,
+              "column": 3
+            },
+            {
+              "title": "confirmation page matches baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 1,
+                      "status": "failed",
+                      "duration": 1876,
+                      "error": {
+                        "message": "Error: Screenshot comparison failed:\n  540 pixels (0.28%) are different.\nExpected: /Users/engineer/my-app/e2e/checkout.spec.ts-snapshots/checkout-confirmation-chromium-darwin.png\nReceived: /Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-confirmation-page-matches-baseline-chromium/actual.png\nDiff: /Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-confirmation-page-matches-baseline-chromium/diff.png",
+                        "stack": ""
+                      },
+                      "retry": 0,
+                      "startTime": "2026-06-06T10:32:14.000Z",
+                      "attachments": [
+                        {
+                          "name": "expected",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/e2e/checkout.spec.ts-snapshots/checkout-confirmation-chromium-darwin.png"
+                        },
+                        {
+                          "name": "actual",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-confirmation-page-matches-baseline-chromium/actual.png"
+                        },
+                        {
+                          "name": "diff",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-confirmation-page-matches-baseline-chromium/diff.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/engineer/my-app/test-results/checkout-spec-ts-Checkout-flow-confirmation-page-matches-baseline-chromium/trace.zip"
+                        }
+                      ],
+                      "steps": [
+                        {
+                          "title": "Before Hooks",
+                          "category": "hook",
+                          "startTime": "2026-06-06T10:32:14.000Z",
+                          "duration": 401,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.goto(https://my-app.local/checkout/confirm)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:14.401Z",
+                          "duration": 388,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.waitForSelector(.confirmation-panel)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:14.789Z",
+                          "duration": 211,
+                          "steps": []
+                        },
+                        {
+                          "title": "expect(page).toHaveScreenshot(checkout-confirmation.png)",
+                          "category": "expect",
+                          "startTime": "2026-06-06T10:32:15.000Z",
+                          "duration": 876,
+                          "error": {
+                            "message": "Screenshot comparison failed: 540 pixels (0.28%) are different."
+                          },
+                          "steps": []
+                        },
+                        {
+                          "title": "After Hooks",
+                          "category": "hook",
+                          "startTime": "2026-06-06T10:32:15.876Z",
+                          "duration": 0,
+                          "steps": []
+                        }
+                      ],
+                      "stderr": [],
+                      "stdout": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e2e/checkout.spec.ts#Checkout flow#confirmation page matches baseline",
+              "file": "e2e/checkout.spec.ts",
+              "line": 22,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "title": "profile.spec.ts",
+      "file": "e2e/profile.spec.ts",
+      "column": 0,
+      "line": 0,
+      "specs": [],
+      "suites": [
+        {
+          "title": "User profile",
+          "file": "e2e/profile.spec.ts",
+          "line": 3,
+          "column": 0,
+          "specs": [
+            {
+              "title": "profile header matches baseline",
+              "ok": false,
+              "tags": [],
+              "tests": [
+                {
+                  "timeout": 30000,
+                  "annotations": [],
+                  "expectedStatus": "passed",
+                  "projectId": "chromium",
+                  "projectName": "chromium",
+                  "results": [
+                    {
+                      "workerIndex": 2,
+                      "status": "failed",
+                      "duration": 1543,
+                      "error": {
+                        "message": "Error: Screenshot comparison failed:\n  8910 pixels (4.67%) are different.\nExpected: /Users/engineer/my-app/e2e/profile.spec.ts-snapshots/profile-header-chromium-darwin.png\nReceived: /Users/engineer/my-app/test-results/profile-spec-ts-User-profile-profile-header-matches-baseline-chromium/actual.png\nDiff: /Users/engineer/my-app/test-results/profile-spec-ts-User-profile-profile-header-matches-baseline-chromium/diff.png",
+                        "stack": ""
+                      },
+                      "retry": 0,
+                      "startTime": "2026-06-06T10:32:14.000Z",
+                      "attachments": [
+                        {
+                          "name": "expected",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/e2e/profile.spec.ts-snapshots/profile-header-chromium-darwin.png"
+                        },
+                        {
+                          "name": "actual",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/test-results/profile-spec-ts-User-profile-profile-header-matches-baseline-chromium/actual.png"
+                        },
+                        {
+                          "name": "diff",
+                          "contentType": "image/png",
+                          "path": "/Users/engineer/my-app/test-results/profile-spec-ts-User-profile-profile-header-matches-baseline-chromium/diff.png"
+                        },
+                        {
+                          "name": "trace",
+                          "contentType": "application/zip",
+                          "path": "/Users/engineer/my-app/test-results/profile-spec-ts-User-profile-profile-header-matches-baseline-chromium/trace.zip"
+                        }
+                      ],
+                      "steps": [
+                        {
+                          "title": "Before Hooks",
+                          "category": "hook",
+                          "startTime": "2026-06-06T10:32:14.000Z",
+                          "duration": 312,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.goto(https://my-app.local/profile/123)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:14.312Z",
+                          "duration": 445,
+                          "steps": []
+                        },
+                        {
+                          "title": "page.waitForLoadState(networkidle)",
+                          "category": "pw:api",
+                          "startTime": "2026-06-06T10:32:14.757Z",
+                          "duration": 198,
+                          "steps": []
+                        },
+                        {
+                          "title": "expect(page).toHaveScreenshot(profile-header.png)",
+                          "category": "expect",
+                          "startTime": "2026-06-06T10:32:14.955Z",
+                          "duration": 588,
+                          "error": {
+                            "message": "Screenshot comparison failed: 8910 pixels (4.67%) are different."
+                          },
+                          "steps": []
+                        },
+                        {
+                          "title": "After Hooks",
+                          "category": "hook",
+                          "startTime": "2026-06-06T10:32:15.543Z",
+                          "duration": 0,
+                          "steps": []
+                        }
+                      ],
+                      "stderr": [],
+                      "stdout": []
+                    }
+                  ],
+                  "status": "unexpected"
+                }
+              ],
+              "id": "e2e/profile.spec.ts#User profile#profile header matches baseline",
+              "file": "e2e/profile.spec.ts",
+              "line": 5,
+              "column": 3
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "errors": [],
+  "stats": {
+    "startTime": "2026-06-06T10:32:14.000Z",
+    "duration": 4231,
+    "expected": 12,
+    "skipped": 0,
+    "unexpected": 3,
+    "flaky": 0
+  }
+}

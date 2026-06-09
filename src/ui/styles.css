@@ -1,0 +1,719 @@
+/* ── Color palette ──────────────────────────────────────────────────────────
+   Dark mode (default, per ui-design-spec.md). Light mode overrides only the
+   variables in the prefers-color-scheme:light block below. Component rules use
+   var(...) exclusively — no literal color values anywhere outside :root. */
+:root {
+  /* Backgrounds */
+  --bg-base: #0e0e10;
+  --bg-panel: #161618;
+  --bg-surface: #1e1e21;
+  --bg-hover: #26262b;
+
+  /* Borders */
+  --border-subtle: #2a2a2f;
+  --border-focus: #3a3a42;
+
+  /* Text */
+  --text-primary: #e8e8ec;
+  --text-secondary: #8b8b96;
+  --text-muted: #55555f;
+
+  /* Semantic — status */
+  --status-fail: #e05c5c;
+  --status-pass: #5cb85c;
+  --status-kept: #8b8b96;
+  --status-warn: #d4954a;
+
+  /* Actions */
+  --action-approve: #3b8a5a;
+  --action-approve-hover: #4aa36d;
+  --action-approve-text: #ffffff;
+  --action-reject: #2a2a2f;
+  --action-reject-hover: #333339;
+
+  /* Accent */
+  --accent: #7c6af7;
+  --accent-subtle: #7c6af720;
+
+  /* Brand — Playwright logo colors, used for the tool name */
+  --brand-green: #2ead33;
+  --brand-red: #e2574c;
+
+  /* Diff overlay */
+  --diff-highlight: #e05c5c40;
+
+  /* Full-screen image scrim */
+  --overlay-bg: rgba(0, 0, 0, 0.9);
+
+  /* Typography */
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-ui: 'DM Sans', 'IBM Plex Sans', system-ui, sans-serif;
+
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 13px;
+  --text-md: 14px;
+  --text-lg: 16px;
+}
+
+/* Light palette. Applied when the user explicitly chooses light
+   (data-theme="light"), and automatically when the OS prefers light AND the
+   user hasn't overridden the theme (:root:not([data-theme])). The manual
+   override is driven by the topbar theme toggle. */
+:root[data-theme='light'] {
+  --bg-base: #f5f5f7;
+  --bg-panel: #ffffff;
+  --bg-surface: #f0f0f3;
+  --bg-hover: #e8e8ed;
+  --border-subtle: #d8d8de;
+  --border-focus: #b8b8c4;
+  --text-primary: #1a1a1e;
+  --text-secondary: #5a5a66;
+  --text-muted: #9a9aaa;
+  --status-fail: #c0392b;
+  --status-pass: #27813a;
+  --status-kept: #7a7a88;
+  --status-warn: #b8620a;
+  --action-approve: #27813a;
+  --action-approve-hover: #2e9944;
+  --action-approve-text: #ffffff;
+  --action-reject: #ececf0;
+  --action-reject-hover: #e0e0e6;
+  --accent: #5a4fd4;
+  --accent-subtle: #5a4fd415;
+  --brand-green: #2e9e34;
+  --brand-red: #cf4034;
+  --diff-highlight: #c0392b30;
+  --overlay-bg: rgba(20, 20, 24, 0.82);
+}
+
+@media (prefers-color-scheme: light) {
+  :root:not([data-theme]) {
+    --bg-base: #f5f5f7;
+    --bg-panel: #ffffff;
+    --bg-surface: #f0f0f3;
+    --bg-hover: #e8e8ed;
+    --border-subtle: #d8d8de;
+    --border-focus: #b8b8c4;
+    --text-primary: #1a1a1e;
+    --text-secondary: #5a5a66;
+    --text-muted: #9a9aaa;
+    --status-fail: #c0392b;
+    --status-pass: #27813a;
+    --status-kept: #7a7a88;
+    --status-warn: #b8620a;
+    --action-approve: #27813a;
+    --action-approve-hover: #2e9944;
+    --action-approve-text: #ffffff;
+    --action-reject: #ececf0;
+    --action-reject-hover: #e0e0e6;
+    --accent: #5a4fd4;
+    --accent-subtle: #5a4fd415;
+    --brand-green: #2e9e34;
+    --brand-red: #cf4034;
+    --diff-highlight: #c0392b30;
+    --overlay-bg: rgba(20, 20, 24, 0.82);
+  }
+}
+
+* { box-sizing: border-box; }
+
+html, body, #root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  background: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbars ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-focus); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-muted); }
+
+/* ── App shell ──────────────────────────────────────────────────────────── */
+.app { display: flex; flex-direction: column; height: 100%; }
+.app__body { display: flex; flex: 1; min-height: 0; }
+
+/* ── Topbar — slim bar, only the tool name + theme toggle ───────────────── */
+.topbar {
+  height: 32px;
+  flex: 0 0 32px;
+  background: var(--bg-base);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  user-select: none;
+}
+.topbar__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 700;
+}
+.topbar__name b { color: var(--brand-green); font-weight: 700; }
+.topbar__name i { color: var(--brand-red); font-style: normal; font-weight: 700; }
+.topbar__spacer { flex: 1; }
+
+.theme-toggle {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  background: transparent;
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 2px 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.theme-toggle:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+/* ── Left panel — failure list ──────────────────────────────────────────── */
+.failures {
+  width: 300px;
+  flex: 0 0 300px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-subtle);
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Review-progress summary at the top of the panel (Playwright-UI style). */
+.failures__summary {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+.failures__progress {
+  font-family: var(--font-ui);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+.failures__count {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.failures__stale {
+  font-size: var(--text-xs);
+  color: var(--status-warn);
+  margin-top: 6px;
+  line-height: 1.4;
+}
+.failures__list { flex: 1; overflow-y: auto; }
+
+/* Spec file header — prominent, clickable to collapse/expand. */
+.failures__spec {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px 8px 12px;
+  cursor: pointer;
+  user-select: none;
+}
+.failures__spec:hover { background: var(--bg-hover); }
+/* Disclosure chevron — points right when collapsed, down when expanded
+   (same affordance as Playwright UI mode's tree). */
+.failures__chevron {
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 1;
+  width: 12px;
+  flex: 0 0 12px;
+  text-align: center;
+  transform: rotate(90deg);
+  transition: transform 120ms ease;
+}
+.failures__chevron--collapsed { transform: rotate(0deg); }
+/* Spec file name uses the SAME font style (family/size/weight) as the test
+   items beneath it; hierarchy comes from color + the chevron, not the font. */
+.failures__spec-name {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  font-weight: 400;
+  color: var(--text-primary);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Test-group header (when a test has >1 failing snapshot) — not clickable. */
+.failure-group__header {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  padding: 4px 12px 2px 30px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.failure-item {
+  height: 32px;
+  padding: 0 12px 0 30px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  cursor: pointer;
+  border-left: 2px solid transparent;
+}
+/* Child snapshot under a test group header — indented further. */
+.failure-item--child { padding-left: 42px; }
+
+.failure-item:hover { background: var(--bg-hover); }
+.failure-item--active {
+  background: var(--bg-hover);
+  border-left-color: var(--accent);
+  color: var(--text-primary);
+}
+.failure-item--reviewed { color: var(--text-muted); }
+
+.failure-item__indicator {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex: 0 0 6px;
+  background: var(--status-fail);
+}
+.failure-item__indicator--pass { background: var(--status-pass); }
+.failure-item__indicator--kept {
+  width: 6px; height: 2px; border-radius: 0;
+  background: var(--status-kept);
+}
+.failure-item__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* ── Right panel — detail ───────────────────────────────────────────────── */
+.detail {
+  flex: 1;
+  min-width: 0;
+  background: var(--bg-base);
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Sections separated by a top divider + generous margin above. */
+.detail__section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid var(--border-subtle);
+}
+.detail__section--header,
+.detail__section:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.section-title {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 500;
+  margin: 0 0 12px;
+  font-family: var(--font-ui);
+}
+
+/* Header breadcrumb — test › snapshot, rendered in ONE uniform font style
+   (same family/size/weight for both parts). Hierarchy reads from the › only. */
+.detail-header__name {
+  font-family: var(--font-mono);
+  font-size: var(--text-md);
+  font-weight: 500;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.4;
+}
+.detail-header__test { font: inherit; color: inherit; }
+.detail-header__sep { color: var(--text-muted); margin: 0 6px; }
+.detail-header__path {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin: 4px 0 0;
+}
+.detail-header__diff {
+  font-size: var(--text-md);
+  color: var(--status-fail);
+  font-weight: 600;
+  margin: 8px 0 0;
+}
+/* Once the baseline is updated/imported, the old pixel count is void. */
+.detail-header__diff--stale .detail-header__diff-value {
+  color: var(--text-muted);
+  font-weight: 400;
+  text-decoration: line-through;
+}
+.detail-header__diff--stale {
+  font-weight: 400;
+}
+.detail-header__diff-note { color: var(--text-secondary); font-size: var(--text-sm); }
+.detail-header__provenance {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin: 6px 0 0;
+}
+
+/* Steps */
+.step-row {
+  height: 32px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 8px;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  border-left: 2px solid transparent;
+}
+.step-row:hover { background: var(--bg-hover); }
+.step-row--failed {
+  background: var(--accent-subtle);
+  border-left-color: var(--status-fail);
+}
+.step-row__num { color: var(--text-muted); font-size: var(--text-xs); width: 20px; text-align: right; flex: 0 0 20px; }
+.step-row__title { color: var(--text-primary); flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.step-row__dur { color: var(--text-muted); font-size: var(--text-xs); }
+.step-row__badge { color: var(--status-fail); font-size: var(--text-xs); font-weight: 600; }
+
+/* Exact assertion source shown beneath the failed step. */
+.step-code {
+  margin: 2px 0 4px 40px;
+  padding: 6px 10px;
+  background: var(--bg-surface);
+  border-left: 2px solid var(--status-fail);
+  border-radius: 0 4px 4px 0;
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-primary);
+  overflow-x: auto;
+  white-space: pre;
+}
+.steps-empty {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  line-height: 1.5;
+}
+.steps-empty code { font-family: var(--font-mono); color: var(--text-muted); }
+
+/* ── Visual diff ────────────────────────────────────────────────────────── */
+.diff-tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+.diff-tab {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  background: transparent;
+  border: none;
+  padding: 4px 10px;
+  border-radius: 999px;
+  cursor: pointer;
+}
+.diff-tab:hover { color: var(--text-secondary); }
+.diff-tab--active { color: var(--accent); background: var(--accent-subtle); }
+
+/* Re-run note shown when the baseline has been written this session. */
+.diff-stale-note {
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  line-height: 1.5;
+  background: var(--bg-surface);
+  border-left: 2px solid var(--status-pass);
+  border-radius: 0 4px 4px 0;
+  padding: 8px 12px;
+  margin-bottom: 14px;
+}
+.diff-stale-note strong { color: var(--status-pass); font-weight: 600; }
+
+.visual-diff { display: flex; gap: 16px; }
+.diff-panel { flex: 1; min-width: 0; }
+/* Stale (pre-rerun) diff image — dimmed to signal it no longer applies. */
+.diff-panel--stale .diff-panel__img-wrap { opacity: 0.45; }
+.diff-panel--stale .diff-panel__sub { color: var(--status-warn); }
+.diff-panel__label {
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+.diff-panel__img-wrap,
+.diff-single__img-wrap {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  max-height: 400px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: zoom-in;
+}
+.diff-panel__img,
+.diff-single__img {
+  max-width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+  display: block;
+}
+.diff-panel__img-wrap--empty {
+  cursor: default;
+  height: 120px;
+  color: var(--text-muted);
+  font-size: var(--text-xs);
+  font-family: var(--font-ui);
+}
+.diff-panel__sub,
+.diff-single__sub {
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+  margin-top: 6px;
+}
+
+/* Slider compare mode */
+.slider {
+  position: relative;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  max-height: 400px;
+  overflow: hidden;
+  user-select: none;
+  cursor: zoom-in;
+}
+.slider__img {
+  display: block;
+  width: 100%;
+  max-height: 400px;
+  object-fit: contain;
+}
+.slider__overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.slider__divider {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  margin-left: -1px;
+  background: var(--accent);
+  cursor: ew-resize;
+}
+.slider__handle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: var(--accent);
+  border: 2px solid var(--bg-surface);
+}
+.slider__tag {
+  position: absolute;
+  top: 8px;
+  font-size: var(--text-xs);
+  font-family: var(--font-ui);
+  color: var(--text-secondary);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
+  padding: 1px 6px;
+}
+.slider__tag--left { left: 8px; }
+.slider__tag--right { right: 8px; }
+
+/* ── Action bar + confirmation ──────────────────────────────────────────── */
+.action-bar { display: flex; gap: 24px; align-items: flex-start; }
+.action { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; }
+.action__caption {
+  margin: 0;
+  max-width: 240px;
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+.btn {
+  height: 36px;
+  padding: 0 20px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  cursor: pointer;
+  border: none;
+}
+.btn:disabled { opacity: 0.5; cursor: default; }
+.btn--approve {
+  background: var(--action-approve);
+  color: var(--action-approve-text);
+  font-weight: 500;
+}
+.btn--approve:hover:not(:disabled) { background: var(--action-approve-hover); }
+.btn--reject {
+  background: var(--action-reject);
+  color: var(--text-primary);
+  font-weight: 400;
+  border: 1px solid var(--border-focus);
+}
+.btn--reject:hover:not(:disabled) { background: var(--action-reject-hover); }
+
+/* Decision banner — shown when revisiting an already-decided failure. */
+.decision-bar { display: flex; align-items: center; gap: 20px; }
+.decision-bar__status { display: flex; flex-direction: column; gap: 2px; }
+.decision-bar__label {
+  font-family: var(--font-ui);
+  font-size: var(--text-base);
+  font-weight: 500;
+}
+.decision-bar__status--pass .decision-bar__label { color: var(--status-pass); }
+.decision-bar__status--kept .decision-bar__label { color: var(--text-secondary); }
+.decision-bar__hint {
+  font-family: var(--font-ui);
+  font-size: var(--text-xs);
+  color: var(--text-muted);
+}
+.decision-bar__change { height: 32px; padding: 0 14px; font-size: var(--text-sm); }
+
+.confirmation { animation: fade-in 120ms ease; }
+.confirmation--approve { color: var(--status-pass); font-size: var(--text-base); }
+.confirmation--reject {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  white-space: pre-wrap;
+  font-family: var(--font-ui);
+}
+
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Import */
+.import-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+.import-button {
+  background: transparent;
+  border: 1px solid var(--border-focus);
+  color: var(--text-primary);
+  height: 30px;
+  padding: 0 14px;
+  border-radius: 4px;
+  font-family: var(--font-ui);
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+.import-button:hover { background: var(--bg-hover); }
+.import-error {
+  color: var(--status-fail);
+  font-size: var(--text-sm);
+  margin-top: 10px;
+  line-height: 1.5;
+}
+.import-preview { display: flex; gap: 16px; margin-top: 12px; }
+
+/* Session complete + empty states */
+.centered {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+}
+.session-complete__title {
+  font-size: var(--text-lg);
+  color: var(--status-pass);
+  margin-bottom: 20px;
+  font-family: var(--font-ui);
+}
+.session-complete__grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 4px 24px;
+  text-align: left;
+}
+.session-complete__label { color: var(--text-secondary); font-family: var(--font-ui); }
+.session-complete__num { color: var(--text-primary); font-family: var(--font-mono); text-align: right; }
+.session-complete__rule { grid-column: 1 / -1; border-top: 1px solid var(--border-subtle); margin: 6px 0; }
+.session-complete__footer {
+  color: var(--text-muted);
+  font-size: var(--text-sm);
+  margin-top: 20px;
+  font-family: var(--font-ui);
+}
+.empty-state {
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  line-height: 1.6;
+}
+
+/* Full-screen image overlay */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: var(--overlay-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  animation: fade-in 150ms ease;
+  cursor: zoom-out;
+}
+.overlay__img { max-width: 95vw; max-height: 95vh; object-fit: contain; }
+
+/* Narrow viewport warning */
+.narrow-warning {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-base);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  color: var(--text-secondary);
+  font-family: var(--font-ui);
+  z-index: 200;
+}
+@media (max-width: 1023px) {
+  .narrow-warning { display: flex; }
+}
+
+.loading {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+}

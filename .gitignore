@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+
+docs/
+
+# Build output
+dist/
+
+# Playwright UI e2e artifacts (repo root)
+/test-results/
+/playwright-report/
+/blob-report/
+/.last-run.json
+
+# OS
+.DS_Store
+
+# Tool sidecar files (when run against a project)
+.playwright-review-session.json
+
+# Demo submodule generated artifacts (the submodule itself is tracked)
+demo/test-results/
+demo/playwright-report/
+demo/.playwright-review-session.json
+
+# Do NOT ignore demo/snapshots/ — committed baseline PNGs the tool compares against
