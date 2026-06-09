@@ -15,6 +15,9 @@ dist/
 # OS
 .DS_Store
 
+# Raw screen-capture source (the optimized GIF in media/ is committed instead)
+*.mov
+
 # Tool sidecar files (when run against a project)
 .playwright-review-session.json
 

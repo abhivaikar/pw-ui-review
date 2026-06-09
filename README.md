@@ -14,7 +14,15 @@ leaves your machine.
 
 ---
 
-## Screenshots
+## Demo
+
+A full walkthrough — reviewing real visual failures from start to finish:
+
+![pw-ui-review demo walkthrough](media/pw-ui-review-demo.gif)
+
+---
+
+## Tool interface
 
 Reviewing real `toMatchSnapshot()` failures — Expected / Actual / Diff
 side by side, with the failing assertion and its test steps:
