@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-06-10
+
 ### Changed
 
 - Approving or importing a baseline no longer auto-advances to the next failure
@@ -33,5 +35,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Comprehensive startup dependency validation with actionable messages.
 - Light and dark themes driven by `prefers-color-scheme`, with a manual toggle.
 
-[Unreleased]: https://github.com/abhivaikar/pw-ui-review/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/abhivaikar/pw-ui-review/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/abhivaikar/pw-ui-review/compare/v0.1.0...v0.1.1
 [0.1.0]: https://github.com/abhivaikar/pw-ui-review/releases/tag/v0.1.0

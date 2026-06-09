@@ -1,6 +1,6 @@
 {
   "name": "pw-ui-review",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Local web UI for reviewing Playwright visual snapshot test failures",
   "type": "module",
   "license": "MIT",
